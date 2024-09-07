@@ -24,3 +24,8 @@ const GOOGLE_AVATAR_KEY = 'googleAvatar'
 export const useGoogleAvatarStorage = () => {
   return useLocalStorage(GOOGLE_AVATAR_KEY)
 }
+
+const FACEBOOK_AVATAR_KEY = 'facebookAvatar'
+export const useFacebookAvatarStorage = () => {
+  return useLocalStorage(FACEBOOK_AVATAR_KEY)
+}
