@@ -1,5 +1,10 @@
-<script setup></script>
+<script setup>
+// Components
+import Map from '@/components/Home/Map.vue'
+</script>
 
 <template>
-  <div></div>
+  <div>
+    <Map />
+  </div>
 </template>
