@@ -1,10 +1,17 @@
 <script setup>
 import L from 'leaflet'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import {
   useGoogleAvatarStorage,
   useFacebookAvatarStorage
 } from '@/utils/composables/useLocalStorage'
+
+const props = defineProps({
+  locationList: {
+    type: Array,
+    required: true
+  }
+})
 
 // 預設帶新北市板橋座標
 const DEFAULT_COORDINATES = [25.009, 121.459]
@@ -56,6 +63,15 @@ function bindPopup() {
 
   marker.value.bindPopup(popupContent).openPopup()
 }
+
+watch(
+  () => props.locationList,
+  (newValues) => {
+    newValues.forEach(({ latitude, longitude }) => {
+      L.marker([latitude, longitude]).addTo(map.value)
+    })
+  }
+)
 </script>
 
 <template>
