@@ -1,6 +1,11 @@
 <script setup>
+// Base
 import { onBeforeMount } from 'vue'
+import { useRouter } from 'vue-router'
+// Composable
 import { useFacebookAvatarStorage } from '@/utils/composables/useLocalStorage'
+
+const router = useRouter()
 
 const { saveLocalStorageData } = useFacebookAvatarStorage()
 
@@ -48,6 +53,7 @@ function loginHandler() {
           function (response) {
             const avatarUrl = response.picture.data.url
             saveLocalStorageData(avatarUrl)
+            router.push({ name: 'Home' })
           }
         )
       }

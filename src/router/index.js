@@ -1,6 +1,10 @@
+// Base
 import { createRouter, createWebHistory } from 'vue-router'
+// Middleware
+import { useMiddleware } from './middleware'
 
 const Login = () => import('@/views/Login/IndexView.vue')
+const Home = () => import('@/views/Home/IndexView.vue')
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -9,8 +13,15 @@ const router = createRouter({
       path: '/login',
       name: 'Login',
       component: Login
+    },
+    {
+      path: '/',
+      name: 'Home',
+      component: Home
     }
   ]
 })
+
+useMiddleware(router)
 
 export default router
