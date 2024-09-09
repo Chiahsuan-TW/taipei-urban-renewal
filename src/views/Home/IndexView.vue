@@ -5,7 +5,9 @@ import ListItem from '@/components/Home/ListItem.vue'
 // Base
 import { ref } from 'vue'
 // Api
-import { getCoordinates, getUrbanRenewalLocation } from '@/api/home.js'
+import { getCoordinates, getUrbanRenewalLocation, getUrbanRenewalArea } from '@/api/home.js'
+
+getUrbanRenewalAreaHandler()
 
 const address = ref('')
 const coordinates = ref({ lat: NaN, lng: NaN })
@@ -33,11 +35,21 @@ function getUrbanRenewalLocationHandler(coordinates) {
     locationList.value = res.data.result
   })
 }
+
+const areaDataList = ref([])
+function getUrbanRenewalAreaHandler() {
+  const params = {
+    directory: 'tucheng.json'
+  }
+  getUrbanRenewalArea(params).then((res) => {
+    areaDataList.value = res.data.result.features.map((feature) => feature.geometry.coordinates[0])
+  })
+}
 </script>
 
 <template>
   <div>
-    <Map :locationList="locationList" />
+    <Map :locationList="locationList" :areaDataList="areaDataList" />
 
     <section>
       <input
@@ -66,7 +78,7 @@ function getUrbanRenewalLocationHandler(coordinates) {
 
 section {
   margin-top: 1rem;
-  padding: 0 1rem;
+  padding: 0 2rem;
 }
 
 input {
@@ -74,7 +86,6 @@ input {
   outline: none;
   min-width: 20rem;
   border-radius: 0.25rem;
-  border: 0px;
   font-size: 1rem;
 }
 </style>

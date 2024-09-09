@@ -10,11 +10,15 @@ const props = defineProps({
   locationList: {
     type: Array,
     required: true
+  },
+  areaDataList: {
+    type: Array,
+    required: true
   }
 })
 
-// 預設帶新北市板橋座標
-const DEFAULT_COORDINATES = [25.009, 121.459]
+// 預設帶新北市土城區公所座標
+const DEFAULT_COORDINATES = [24.972, 121.443]
 
 const map = ref(null)
 const marker = ref(null)
@@ -27,7 +31,7 @@ onMounted(() => {
 function initMap() {
   const mapConfig = {
     center: DEFAULT_COORDINATES,
-    zoom: 13,
+    zoom: 16,
     zoomControl: true,
     layers: [
       L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -61,7 +65,7 @@ function bindPopup() {
   </div>
 `
 
-  marker.value.bindPopup(popupContent).openPopup()
+  marker.value.bindPopup(popupContent, {minWidth: 120}).openPopup()
 }
 
 watch(
@@ -72,6 +76,23 @@ watch(
     })
   }
 )
+
+watch(
+  () => props.areaDataList,
+  (newAreaDataList) => {
+    addPolygons(newAreaDataList)
+  }
+)
+
+function addPolygons(dataList) {
+
+  const polygonList = dataList.map((coordinates) => {
+      const polygon = coordinates.map(([longitude, latitude]) => [latitude, longitude])
+      return L.polygon(polygon, {color: '#5d38bf', fillColor: '#a48afb', fillOpacity: 0.5})
+    })
+
+  L.featureGroup(polygonList).addTo(map.value)
+}
 </script>
 
 <template>

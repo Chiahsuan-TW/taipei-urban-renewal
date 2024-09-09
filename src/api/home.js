@@ -8,3 +8,7 @@ export function getCoordinates(params) {
 export function getUrbanRenewalLocation(params) {
   return apiService.get('/api/v1/server/xinbei/calc-distance', { params })
 }
+
+export function getUrbanRenewalArea(params) {
+  return apiService.get('/api/v1/server/xinbei/geolocation-json', { params })
+}

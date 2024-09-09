@@ -9,8 +9,8 @@ defineProps({
 
 <template>
   <div class="list-item" v-for="(location, index) in locationList" :key="index">
-    <span>{{ location.stop_name }}</span>
-    <p>
+    <span class="stop-name">{{ location.stop_name }}</span>
+    <p class="distance">
       <span>{{ location.distance }}</span>
       <span>km</span>
     </p>
@@ -21,9 +21,15 @@ defineProps({
 .list-item {
   display: flex;
   justify-content: space-between;
-  padding: 0.5rem 1rem;
+  align-items: center;
+  padding: 1rem;
   border: 1px solid gray;
   border-radius: 0.5rem;
+  background-color: white;
+}
+
+.distance {
+ color: #3961a2
 }
 
 .list-item span:not(:last-child) {
