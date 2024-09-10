@@ -4,8 +4,12 @@ import GoogleSignInButton from '@/components/Login/GoogleSignInButton.vue'
 import FacebookSignInButton from '@/components/Login/FacebookSignInButton.vue'
 // Base
 import { ref, onUnmounted } from 'vue'
+// Store
+import { useUserStore } from '@/stores/user'
 // Composables
 import { useGoogleAvatarStorage } from '@/utils/composables/useLocalStorage'
+
+const { setUserCoordinates } = useUserStore()
 
 const { getLocalStorageData } = useGoogleAvatarStorage()
 const isGoogleAuthorized = ref(false)
@@ -15,6 +19,25 @@ function setGoogleAuthorized() {
 
 document.addEventListener('visibilitychange', setGoogleAuthorized)
 onUnmounted(() => document.removeEventListener('visibilitychange', setGoogleAuthorized))
+
+getUserCurrentLocationHandler()
+function getUserCurrentLocationHandler() {
+  navigator.geolocation.getCurrentPosition(successHandler, errorHandler, {
+    enableHighAccuracy: false,
+    timeout: 5000,
+    maximumAge: 0
+  })
+}
+
+function successHandler(position) {
+  const { latitude, longitude } = position.coords
+  setUserCoordinates([latitude, longitude])
+}
+
+function errorHandler(error) {
+  setUserCoordinates(undefined)
+  console.error(error)
+}
 </script>
 
 <template>

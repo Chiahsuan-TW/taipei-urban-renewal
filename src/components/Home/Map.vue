@@ -1,6 +1,10 @@
 <script setup>
+// Base
 import L from 'leaflet'
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref, watch, computed } from 'vue'
+// Store
+import { useUserStore } from '@/stores/user'
+// Util
 import {
   useGoogleAvatarStorage,
   useFacebookAvatarStorage
@@ -17,20 +21,23 @@ const props = defineProps({
   }
 })
 
-// 預設帶新北市土城區公所座標
+const { userCoordinates } = useUserStore()
+
+// 若使用者不允許偵測位置則預設帶新北市土城區公所座標
 const DEFAULT_COORDINATES = [24.972, 121.443]
+const userCurrentLocation = computed(() => userCoordinates ?? DEFAULT_COORDINATES)
 
 const map = ref(null)
 const marker = ref(null)
 onMounted(() => {
   map.value = initMap()
-  marker.value = addMarker(DEFAULT_COORDINATES, map.value)
+  marker.value = addMarker(userCurrentLocation.value, map.value)
   bindPopup()
 })
 
 function initMap() {
   const mapConfig = {
-    center: DEFAULT_COORDINATES,
+    center: userCurrentLocation.value,
     zoom: 16,
     zoomControl: true,
     layers: [
@@ -65,7 +72,7 @@ function bindPopup() {
   </div>
 `
 
-  marker.value.bindPopup(popupContent, {minWidth: 120}).openPopup()
+  marker.value.bindPopup(popupContent, { minWidth: 120 }).openPopup()
 }
 
 watch(
@@ -85,12 +92,10 @@ watch(
 )
 
 function addPolygons(dataList) {
-
   const polygonList = dataList.map((coordinates) => {
-      const polygon = coordinates.map(([longitude, latitude]) => [latitude, longitude])
-      return L.polygon(polygon, {color: '#5d38bf', fillColor: '#a48afb', fillOpacity: 0.5})
-    })
-
+    const polygon = coordinates.map(([longitude, latitude]) => [latitude, longitude])
+    return L.polygon(polygon, { color: '#5d38bf', fillColor: '#a48afb', fillOpacity: 0.5 })
+  })
   L.featureGroup(polygonList).addTo(map.value)
 }
 </script>

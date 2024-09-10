@@ -29,7 +29,7 @@ defineProps({
 }
 
 .distance {
- color: #3961a2
+  color: #3961a2;
 }
 
 .list-item span:not(:last-child) {

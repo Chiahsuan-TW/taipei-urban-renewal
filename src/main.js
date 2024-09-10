@@ -6,7 +6,6 @@ import router from './router'
 import './assets/styles/index.css'
 import 'leaflet/dist/leaflet.css'
 
-
 const app = createApp(App)
 
 app.use(createPinia())

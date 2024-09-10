@@ -15,7 +15,8 @@ function initGoogleSignInButton() {
   })
   google.accounts.id.renderButton(document.querySelector(`#${GOOGLE_SIGN_IN_BUTTON}`), {
     theme: 'outline',
-    size: 'large'
+    size: 'large',
+    width: 400
   })
 }
 
