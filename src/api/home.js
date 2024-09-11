@@ -1,8 +1,12 @@
-import googleApiService from '@/utils/services/googleApi.js'
 import apiService from '@/utils/services/api.js'
 
 export function getCoordinates(params) {
-  return googleApiService.get('/geocode/json', { params })
+  return apiService({
+    baseURL: 'https://maps.googleapis.com/maps/api',
+    url: '/geocode/json',
+    method: 'GET',
+    params
+  })
 }
 
 export function getUrbanRenewalLocation(params) {
