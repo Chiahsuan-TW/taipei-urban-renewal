@@ -9,7 +9,7 @@ export const useMiddleware = (router) => {
     const googleStorage = useGoogleAvatarStorage()
     const facebookStorage = useFacebookAvatarStorage()
     const isAuthorized =
-      googleStorage.getLocalStorageData() !== null && facebookStorage.getLocalStorageData !== null
+      googleStorage.getLocalStorageData() !== null && facebookStorage.getLocalStorageData() !== null
 
     if (to.name === 'Home' && isAuthorized === false) return { name: 'Login' }
     return

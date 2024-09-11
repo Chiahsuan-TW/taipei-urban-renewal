@@ -9,16 +9,16 @@ import { useUserStore } from '@/stores/user'
 // Composables
 import { useGoogleAvatarStorage } from '@/utils/composables/useLocalStorage'
 
-const { setUserCoordinates } = useUserStore()
-
 const { getLocalStorageData } = useGoogleAvatarStorage()
-const isGoogleAuthorized = ref(false)
+const isGoogleAuthorized = ref(getLocalStorageData() !== null)
+
+document.addEventListener('visibilitychange', setGoogleAuthorized)
+onUnmounted(() => document.removeEventListener('visibilitychange', setGoogleAuthorized))
 function setGoogleAuthorized() {
   isGoogleAuthorized.value = getLocalStorageData() !== null
 }
 
-document.addEventListener('visibilitychange', setGoogleAuthorized)
-onUnmounted(() => document.removeEventListener('visibilitychange', setGoogleAuthorized))
+const { setUserCoordinates } = useUserStore()
 
 getUserCurrentLocationHandler()
 function getUserCurrentLocationHandler() {
