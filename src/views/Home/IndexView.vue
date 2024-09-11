@@ -2,10 +2,16 @@
 // Components
 import Map from '@/components/Home/Map.vue'
 import ListItem from '@/components/Home/ListItem.vue'
+import Spinner from '@/components/Shared/Spinner.vue'
 // Base
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+// Store
+import { useLoadingStore } from '@/stores/loading'
 // Api
 import { getCoordinates, getUrbanRenewalLocation, getUrbanRenewalArea } from '@/api/home.js'
+
+const loadingStore = useLoadingStore()
+const isLoading = computed(() => loadingStore.getLoadingStatus())
 
 getUrbanRenewalAreaHandler()
 
@@ -13,42 +19,47 @@ const address = ref('')
 const coordinates = ref({ lat: NaN, lng: NaN })
 
 async function searchHandler(address) {
+  if (address === '') return
   await getCoordinatesHandler(address)
   getUrbanRenewalLocationHandler(coordinates.value)
 }
 
 async function getCoordinatesHandler(address) {
-  if (address === '') return
-
   const params = {
     address,
     key: import.meta.env.VITE_APP_GEOCODING_API_KEY
   }
   await getCoordinates(params).then((res) => {
-    coordinates.value = res.data.results[0].geometry.location
+    coordinates.value = res.data.results[0]?.geometry?.location
   })
 }
 
 const locationList = ref([])
-function getUrbanRenewalLocationHandler(coordinates) {
-  getUrbanRenewalLocation(coordinates).then((res) => {
+async function getUrbanRenewalLocationHandler(coordinates) {
+  if (coordinates === undefined) return window.alert('請輸入有效地址喔～')
+
+  loadingStore.addLoadingKey()
+  await getUrbanRenewalLocation(coordinates).then((res) => {
     locationList.value = res.data.result
   })
+  loadingStore.removeLoadingKey()
 }
 
 const areaDataList = ref([])
-function getUrbanRenewalAreaHandler() {
+async function getUrbanRenewalAreaHandler() {
+  loadingStore.addLoadingKey()
   const params = {
     directory: 'tucheng.json'
   }
-  getUrbanRenewalArea(params).then((res) => {
+  await getUrbanRenewalArea(params).then((res) => {
     areaDataList.value = res.data.result.features.map((feature) => feature.geometry.coordinates[0])
   })
+  loadingStore.removeLoadingKey()
 }
 </script>
 
 <template>
-  <div>
+  <div class="wrapper">
     <Map :locationList="locationList" :areaDataList="areaDataList" />
 
     <section>
@@ -58,15 +69,28 @@ function getUrbanRenewalAreaHandler() {
         placeholder="請輸入您要查詢的位置"
         type="text"
       />
-
+      <button @click="searchHandler(address)" class="search" type="button">
+        <i class="fas fa-search fa-lg"></i>
+      </button>
       <div class="location-list">
         <ListItem :locationList="locationList" />
       </div>
     </section>
+    
+    <Spinner :show="isLoading" />
   </div>
 </template>
 
 <style scoped>
+.wrapper {
+  position: relative;
+}
+
+.search {
+  border: none;
+  cursor: pointer;
+}
+
 .location-list {
   margin-top: 1rem;
   height: calc(100dvh - 35rem);
