@@ -7,15 +7,15 @@ import { ref, onUnmounted } from 'vue'
 // Store
 import { useUserStore } from '@/stores/user'
 // Composables
-import { useGoogleAvatarStorage } from '@/utils/composables/useLocalStorage'
+import { useGoogleAvatarStorage } from '@/utils/composables/useSessionStorage'
 
-const { getLocalStorageData } = useGoogleAvatarStorage()
-const isGoogleAuthorized = ref(getLocalStorageData() !== null)
+const { getSessionStorageData } = useGoogleAvatarStorage()
+const isGoogleAuthorized = ref(getSessionStorageData() !== null)
 
 document.addEventListener('visibilitychange', setGoogleAuthorized)
 onUnmounted(() => document.removeEventListener('visibilitychange', setGoogleAuthorized))
 function setGoogleAuthorized() {
-  isGoogleAuthorized.value = getLocalStorageData() !== null
+  isGoogleAuthorized.value = getSessionStorageData() !== null
 }
 
 const { setUserCoordinates } = useUserStore()

@@ -8,7 +8,7 @@ import { useUserStore } from '@/stores/user'
 import {
   useGoogleAvatarStorage,
   useFacebookAvatarStorage
-} from '@/utils/composables/useLocalStorage'
+} from '@/utils/composables/useSessionStorage'
 
 const props = defineProps({
   locationList: {
@@ -61,8 +61,8 @@ function bindPopup() {
 
   const googleStrage = useGoogleAvatarStorage()
   const facebookStorage = useFacebookAvatarStorage()
-  const googleAvatar = googleStrage.getLocalStorageData()
-  const facebookAvatar = facebookStorage.getLocalStorageData()
+  const googleAvatar = googleStrage.getSessionStorageData()
+  const facebookAvatar = facebookStorage.getSessionStorageData()
 
   const popupContent = `
 <p class="popup-text">目前的位置</p>

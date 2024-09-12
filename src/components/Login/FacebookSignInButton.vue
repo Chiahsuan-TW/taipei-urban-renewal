@@ -3,11 +3,11 @@
 import { onBeforeMount } from 'vue'
 import { useRouter } from 'vue-router'
 // Composable
-import { useFacebookAvatarStorage } from '@/utils/composables/useLocalStorage'
+import { useFacebookAvatarStorage } from '@/utils/composables/useSessionStorage'
 
 const router = useRouter()
 
-const { saveLocalStorageData } = useFacebookAvatarStorage()
+const { saveSessionStorageData } = useFacebookAvatarStorage()
 
 onBeforeMount(async () => await loadFacebookSDK())
 
@@ -52,7 +52,7 @@ function loginHandler() {
           },
           function (response) {
             const avatarUrl = response.picture.data.url
-            saveLocalStorageData(avatarUrl)
+            saveSessionStorageData(avatarUrl)
             router.push({ name: 'Home' })
           }
         )
