@@ -76,7 +76,7 @@ async function getUrbanRenewalAreaHandler() {
         <ListItem :locationList="locationList" />
       </div>
     </section>
-    
+
     <Spinner :show="isLoading" />
   </div>
 </template>

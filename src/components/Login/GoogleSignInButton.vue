@@ -2,6 +2,8 @@
 import { onMounted } from 'vue'
 import { useGoogleAvatarStorage } from '@/utils/composables/useLocalStorage'
 
+const emit = defineEmits(['google-login'])
+
 onMounted(() => initGoogleSignInButton())
 
 const { saveLocalStorageData } = useGoogleAvatarStorage()
@@ -23,6 +25,7 @@ function initGoogleSignInButton() {
 function handleCredentialResponse(response) {
   const userInfo = parseJwt(response.credential)
   saveLocalStorageData(userInfo.picture)
+  emit('google-login')
 }
 
 function parseJwt(token) {

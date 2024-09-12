@@ -46,7 +46,7 @@ function errorHandler(error) {
       <h1>新北市都市更新地點查詢</h1>
       <div class="button-wrapper">
         <FacebookSignInButton v-if="isGoogleAuthorized" />
-        <GoogleSignInButton v-else />
+        <GoogleSignInButton @google-login="setGoogleAuthorized" v-else />
       </div>
       <p class="login-note">*請依序登入 Google 及 Facebbok 帳戶以開始使用</p>
     </div>
